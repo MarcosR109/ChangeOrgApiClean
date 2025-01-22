@@ -28,9 +28,11 @@ use Illuminate\Support\Facades\Route;
     Route::post('users/{user}/events/{event}/book', 'bookEvent');
     Route::get('users/{user}/events', 'listEvents');
 });*/
+
 Route::controller(PeticioneController::class)->group(function () {
     Route::get('peticiones', 'index');
     Route::get('peticiones/firmadas', 'listarFirmadas');
+    Route::get('peticiones/list','list');
     Route::get('peticiones/{id}', 'listMine');
     Route::get('peticiones/show/{id}', 'show');
     Route::put('peticiones/{id}', 'update');

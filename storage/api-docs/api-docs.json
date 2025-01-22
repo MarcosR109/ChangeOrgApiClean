@@ -1,0 +1,40 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Example API",
+        "description": "Example info",
+        "contact": {
+            "name": "Swagger API Team"
+        },
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "https://example.localhost",
+            "description": "API server"
+        }
+    ],
+    "paths": {
+        "/api/users": {
+            "get": {
+                "operationId": "946529c045f5dd1e413a3ec2dc044b38",
+                "responses": {
+                    "200": {
+                        "description": "An example endpoint"
+                    }
+                }
+            }
+        },
+        "/api/peticiones": {
+            "get": {
+                "operationId": "955c84e71546970812f84c46c9b726d5",
+                "responses": {
+                    "200": {
+                        "description": "Todas las peticiones de la BBDD"
+                    }
+                }
+            }
+        }
+    },
+    "tags": []
+}
