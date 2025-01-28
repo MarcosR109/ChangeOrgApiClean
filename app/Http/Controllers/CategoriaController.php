@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Validator;
 
 class CategoriaController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api', ['except' => ['', '']]);
+    }
     public function store(Request $request)
     {
         Validator::validate($request->all(), [
@@ -23,7 +27,7 @@ class CategoriaController extends Controller
             $categoria = Categoria::findOrFail($id);
             return response()->json(['Message' => 'Categoría encontrada', 'Data' => $categoria]);
         } catch (Exception) {
-            return response()->json('Error buscando la categoría',404 );
+            return response()->json('Error buscando la categoría', 404);
         }
     }
 }

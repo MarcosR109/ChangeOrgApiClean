@@ -48,7 +48,7 @@ En este caso, puede ser una que él haya subido o no.*/
     //1 admin, 2 usuario logueado
     public function update(User $user, Peticione $peticione): bool
     {
-        if ($user->role_id == 2 || $peticione->user_id = $user->id) { //Si el usuario es admin o si su user->id coincide con el user_id de la petición.
+        if ($user->role_id == 1 || $peticione->user_id == $user->id) { //Si el usuario es admin o si su user->id coincide con el user_id de la petición.
             return true;
         }
         return false;
@@ -58,7 +58,7 @@ En este caso, puede ser una que él haya subido o no.*/
      */
     public function delete(User $user, Peticione $peticione): bool
     {
-        if ($user->role_id == 2 || $peticione->user_id = $user->id) { //Si el usuario es admin o si su user->id coincide con el user_id de la petición.
+        if ($user->role_id == 1 || $peticione->user_id == $user->id) { //Si el usuario es admin o si su user->id coincide con el user_id de la petición.
             return true;
         }
         return false;

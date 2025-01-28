@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth;
 use PhpParser\Node\Stmt\Return_;
+use App\Models\User;
 
 /**
  * @OA\Tag(
@@ -55,7 +56,8 @@ class PeticioneController extends Controller
     public function listMine($id)
     {
         try {
-            $peticiones = Peticione::findOrFail($id);
+            $user = User::FindOrFail($id);
+            $peticiones = $user->peticiones;
         } catch (Exception) {
             return response()->json(['Error' => 'Error buscando usuario'], 404);
         }
@@ -97,7 +99,7 @@ class PeticioneController extends Controller
         } catch (Exception) {
             return response()->json(['Error' => 'Error actualizando la petición'], 500);
         }
-        return response()->json(["Message" => 'Petición actualizada', 'Datos' => $peticion], 401);
+        return response()->json(["Message" => 'Petición actualizada', 'Datos' => $peticion], 200);
     }
 
     public
@@ -175,6 +177,7 @@ class PeticioneController extends Controller
     {
         try {
             $peticion = Peticione::query()->findOrFail($id);
+            $user = $request->user();
             if ($request->user()->cannot('firmar', $peticion)) {
                 return response()->json(
                     ['message' => 'Ya has firmado esta petición'],
@@ -212,9 +215,10 @@ class PeticioneController extends Controller
     {
         try {
             $peticion = Peticione::query()->findOrFail($id);
+            $peticion->file->delete();
             $peticion->delete();
         } catch (Exception) {
-            return response()->json(['Error' => 'Error encontrando la petición']);
+            return response()->json(['Error' => 'Error encontrando la petición'],405);
         }
         return response()->json(['Message' => 'Petición eliminada']);
     }
