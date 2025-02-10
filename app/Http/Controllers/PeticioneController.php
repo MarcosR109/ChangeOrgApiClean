@@ -96,15 +96,16 @@ class PeticioneController extends Controller
             if ($peticion) {
                 $peticion->update($request->all());
             }
-        } catch (Exception) {
-            return response()->json(['Error' => 'Error actualizando la petición'], 500);
+        } catch (Exception $e) {
+            return response()->json(['Error' => 'Error actualizando la petición',$e->getMessage()], 500);
         }
         return response()->json(["Message" => 'Petición actualizada', 'Datos' => $peticion], 200);
     }
 
     public
-    function store(Request $request)
-    {
+        function store(
+        Request $request
+    ) {
         $this->validate($request, [
             'titulo' => 'required|max:255',
             'descripcion' => 'required',
@@ -142,8 +143,10 @@ class PeticioneController extends Controller
     }
 
     public
-    function fileUpload(Request $req, $peticione_id = null)
-    {
+        function fileUpload(
+        Request $req,
+        $peticione_id = null
+    ) {
         $file = $req->file('foto');
         $fileModel = new File;
         $fileModel->peticione_id = $peticione_id;
@@ -205,20 +208,28 @@ class PeticioneController extends Controller
         }
         try {
             $peticion->estado = "Aceptada";
+            $peticion->save();
         } catch (Exception) {
             return response()->json(['message' => 'Ha ocurrido un error buscando la petición.']);
         }
         return response()->json(['message' => 'Estado cambiado', 'data' => $peticion]);
     }
 
-    public function delete($id)
+    public function delete(Request $request, $id)
     {
         try {
             $peticion = Peticione::query()->findOrFail($id);
+            if ($request->user()->cannot('delete', $peticion)) {
+                return response()->json(['Error' => "No estás autorizado para borrar la petición"], 406);
+            }
+            if ($peticion->firmas->count() > 0) {
+                // $peticion->firmantes > 0 ?? no se nos ha ocurrido en ningún momento???
+                return response()->json('La petición está firmada', 405);
+            }
             $peticion->file->delete();
             $peticion->delete();
-        } catch (Exception) {
-            return response()->json(['Error' => 'Error encontrando la petición'],405);
+        } catch (Exception $e) {
+            return response()->json(['Error' => 'Error buscando la petición',$e->getMessage()], 404);
         }
         return response()->json(['Message' => 'Petición eliminada']);
     }
